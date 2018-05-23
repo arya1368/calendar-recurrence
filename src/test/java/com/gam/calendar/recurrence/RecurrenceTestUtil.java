@@ -4,6 +4,7 @@ import com.ibm.icu.util.Calendar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.gam.calendar.recurrence.Recurrence.PERSIAN_LOCALE;
 
@@ -39,6 +40,11 @@ public class RecurrenceTestUtil {
 
     public static void setCalendarTimeForEndOfDay() {
         setCalendarTime(23, 59, 59);
+    }
+
+    public static void setCalendarTimeForConstantTestTime(String date) throws ParseException {
+        CAL.setTime(SDF.parse(date));
+        setCalendarTimeForConstantTestTime();
     }
 
     public static void setCalendarTimeForConstantTestTime() {
