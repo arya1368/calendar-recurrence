@@ -16,16 +16,15 @@ public class YearlyRecurrence extends Recurrence {
     }
 
     protected int calculateElapsedUnit(Date toDate) {
-        Calendar cal = Calendar.getInstance(PERSIAN_LOCALE);
-        cal.setTime(getBeginDate());
-        int fromYear = cal.get(Calendar.YEAR);
-        int fromMonth = cal.get(Calendar.MONTH);
-        double fromDay = cal.get(Calendar.DATE) + cal.get(Calendar.HOUR_OF_DAY)/24.0;
+        calendar.setTime(getBeginDate());
+        int fromYear = calendar.get(Calendar.YEAR);
+        int fromMonth = calendar.get(Calendar.MONTH);
+        double fromDay = calendar.get(Calendar.DATE) + calendar.get(Calendar.HOUR_OF_DAY)/24.0;
 
-        cal.setTime(toDate);
-        int toYear = cal.get(Calendar.YEAR);
-        int toMonth = cal.get(Calendar.MONTH);
-        double toDay = cal.get(Calendar.DATE) + cal.get(Calendar.HOUR_OF_DAY)/24.0;
+        calendar.setTime(toDate);
+        int toYear = calendar.get(Calendar.YEAR);
+        int toMonth = calendar.get(Calendar.MONTH);
+        double toDay = calendar.get(Calendar.DATE) + calendar.get(Calendar.HOUR_OF_DAY)/24.0;
 
         if (fromYear > toYear)
             return 0;

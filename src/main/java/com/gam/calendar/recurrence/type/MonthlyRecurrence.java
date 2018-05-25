@@ -16,24 +16,17 @@ public class MonthlyRecurrence extends Recurrence {
     }
 
     protected int calculateElapsedUnit(Date toDate) {
-        Calendar cal = Calendar.getInstance(PERSIAN_LOCALE);
-        cal.setTime(getBeginDate());
-        int fromMonth = cal.get(Calendar.YEAR) * 12 + cal.get(Calendar.MONTH);
-        double fromDay = cal.get(Calendar.DATE);
-        int lastDayOfFromMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        double fromHour = cal.get(Calendar.HOUR_OF_DAY) +
-                cal.get(Calendar.MINUTE) / 60.0 +
-                cal.get(Calendar.SECOND) / 3600.0 +
-                cal.get(Calendar.MILLISECOND) / 3600000.0;
+        calendar.setTime(getBeginDate());
+        int fromMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
+        double fromDay = calendar.get(Calendar.DATE);
+        int lastDayOfFromMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        double fromHour = getCalendarHourIncludeMinuteSecondMilliSecond();
 
-        cal.setTime(toDate);
-        int toMonth = cal.get(Calendar.YEAR) * 12 + cal.get(Calendar.MONTH);
-        double toDay = cal.get(Calendar.DATE);
-        int lastDayOfToMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        double toHour = cal.get(Calendar.HOUR_OF_DAY) +
-                cal.get(Calendar.MINUTE) / 60.0 +
-                cal.get(Calendar.SECOND) / 3600.0 +
-                cal.get(Calendar.MILLISECOND) / 3600000.0;
+        calendar.setTime(toDate);
+        int toMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
+        double toDay = calendar.get(Calendar.DATE);
+        int lastDayOfToMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        double toHour = getCalendarHourIncludeMinuteSecondMilliSecond();
 
         if (fromMonth > toMonth)
             return 0;
@@ -41,7 +34,7 @@ public class MonthlyRecurrence extends Recurrence {
         int elapsedMonth = toMonth - fromMonth;
 
         if (fromDay == lastDayOfFromMonth && toDay == lastDayOfToMonth)
-            return fromHour >= toHour ? elapsedMonth : ++ elapsedMonth;
+            return fromHour >= toHour ? elapsedMonth : ++elapsedMonth;
 
         fromDay += fromHour / 24.0;
         toDay += toHour / 24.0;

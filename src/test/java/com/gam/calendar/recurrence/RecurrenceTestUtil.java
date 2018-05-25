@@ -12,7 +12,6 @@ import static com.gam.calendar.recurrence.Recurrence.PERSIAN_LOCALE;
  * @author Arya Pishgah (pishgah@gamelectronics.com) 16/05/2018
  */
 public class RecurrenceTestUtil {
-
     public static final Calendar CAL = Calendar.getInstance(PERSIAN_LOCALE);
     public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd");
     public static final DateRange RANGE_WITH_30_DAYS = new DateRange();
@@ -51,7 +50,7 @@ public class RecurrenceTestUtil {
         setCalendarTime(8, 0 , 0);
     }
 
-    public static void setCalendarTime(int hour, int minute, int second) {
+    private static void setCalendarTime(int hour, int minute, int second) {
         CAL.set(Calendar.HOUR_OF_DAY, hour);
         CAL.set(Calendar.MINUTE, minute);
         CAL.set(Calendar.SECOND, second);

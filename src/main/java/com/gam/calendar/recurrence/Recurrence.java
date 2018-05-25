@@ -6,6 +6,7 @@ import com.ibm.icu.util.ULocale;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Arya Pishgah (pishgah@gamelectronics.com) 16/05/2018
@@ -13,16 +14,18 @@ import java.util.List;
 public abstract class Recurrence implements RecurrenceCalculator {
     public static final ULocale PERSIAN_LOCALE = new ULocale("fa_IR@calendar=persian");
 
-    protected DateRange dateRange;
+    private DateRange dateRange;
     protected int interval;
     protected List<Date> exDates;
     protected Calendar calendar;
+    protected Map<Integer, Integer> daysOfWeekOrder;
 
     protected Recurrence(RecurrenceBuilder builder) {
         dateRange = builder.range;
         interval = builder.interval;
         exDates = builder.exDates;
         calendar = Calendar.getInstance(PERSIAN_LOCALE);
+        daysOfWeekOrder = builder.daysOfWeekOrder;
     }
 
     public Date getBeginDate() {
@@ -59,7 +62,7 @@ public abstract class Recurrence implements RecurrenceCalculator {
         int differenceUnit = calculateDifferenceUnit(from);
         addDifferenceUnitToRecurrenceBeginDate(differenceUnit);
         for (; isInUpperBound(calendar.getTime(), getEndDate()); addDifferenceUnitToRecurrenceBeginDate(differenceUnit)) {
-            if (!isDateInExDates())
+            if (!isDateInExDates() && from.compareTo(calendar.getTime()) < 0)
                 return calendar.getTime();
 
             differenceUnit += interval;
@@ -103,16 +106,20 @@ public abstract class Recurrence implements RecurrenceCalculator {
         return false;
     }
 
-    protected Calendar getCalendarWithRecurrenceBeginTimeAndGivenDate(Date date) {
+    protected void setCalendarWithRecurrenceBeginTime() {
         Calendar beginCal = Calendar.getInstance();
         beginCal.setTime(getBeginDate());
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, beginCal.get(Calendar.HOUR_OF_DAY));
-        cal.set(Calendar.MINUTE, beginCal.get(Calendar.MINUTE));
-        cal.set(Calendar.SECOND, beginCal.get(Calendar.SECOND));
-        cal.set(Calendar.MILLISECOND, beginCal.get(Calendar.MILLISECOND));
-        return cal;
+        calendar.set(Calendar.HOUR_OF_DAY, beginCal.get(Calendar.HOUR_OF_DAY));
+        calendar.set(Calendar.MINUTE, beginCal.get(Calendar.MINUTE));
+        calendar.set(Calendar.SECOND, beginCal.get(Calendar.SECOND));
+        calendar.set(Calendar.MILLISECOND, beginCal.get(Calendar.MILLISECOND));
+    }
+
+    protected double getCalendarHourIncludeMinuteSecondMilliSecond() {
+        return calendar.get(Calendar.HOUR_OF_DAY) +
+                calendar.get(Calendar.MINUTE) / 60.0 +
+                calendar.get(Calendar.SECOND) / 3600.0 +
+                calendar.get(Calendar.MILLISECOND) / 3600000.0;
     }
 }

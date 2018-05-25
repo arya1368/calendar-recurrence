@@ -55,8 +55,8 @@ class YearlyRecurrenceTest {
         @Nested
         class CalculateOccurrenceDateAfter {
             @ParameterizedTest
-            @ValueSource(strings = {"2013-02-05", "2013-02-04", "2013-01-05", "2010-02-05"})
-            void whenGivenDateIsEqualOrBeforeRecurrenceBeginDateShouldReturnRecurrenceBeginDate(String beforeRecurrence)
+            @ValueSource(strings = {"2013-02-04", "2013-01-05", "2010-02-05"})
+            void whenGivenDateIsBeforeRecurrenceBeginDateShouldReturnRecurrenceBeginDate(String beforeRecurrence)
                     throws Exception {
                 setCalendarTimeForConstantTestTime(beforeRecurrence);
                 assertEquals(recurrenceStartDate, getOccurrenceDateAfterCALDate());
@@ -211,11 +211,15 @@ class YearlyRecurrenceTest {
             CAL.setTime(recurrenceStartDate);
             CAL.add(Calendar.YEAR, elapsedYearFromRecurrenceBeginDate);
             CAL.add(Calendar.HOUR_OF_DAY, 1);
-            assertEquals(expectedElapsedYear, yearlyRecurrence.calculateElapsedUnit(CAL.getTime()));
+            assertEquals(expectedElapsedYear, calculateElapsedYear());
             CAL.add(Calendar.DATE, 10);
-            assertEquals(expectedElapsedYear, yearlyRecurrence.calculateElapsedUnit(CAL.getTime()));
+            assertEquals(expectedElapsedYear, calculateElapsedYear());
             CAL.add(Calendar.MONTH, 8);
-            assertEquals(expectedElapsedYear, yearlyRecurrence.calculateElapsedUnit(CAL.getTime()));
+            assertEquals(expectedElapsedYear, calculateElapsedYear());
+        }
+
+        private int calculateElapsedYear() {
+            return yearlyRecurrence.calculateElapsedUnit(CAL.getTime());
         }
     }
 }

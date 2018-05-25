@@ -4,6 +4,7 @@ import com.gam.calendar.recurrence.RecurrenceBuilder;
 import com.gam.calendar.recurrence.Recurrence;
 import com.ibm.icu.util.Calendar;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -24,11 +25,20 @@ public class DailyRecurrence extends Recurrence {
     }
 
     protected int calculateElapsedUnit(Date toDate) {
-        Calendar cal = getCalendarWithRecurrenceBeginTimeAndGivenDate(toDate);
-        return (int) ChronoUnit.DAYS.between(
+        calendar.setTime(toDate);
+        double toHour = getCalendarHourIncludeMinuteSecondMilliSecond();
+        setCalendarWithRecurrenceBeginTime();
+        int elapsed = (int) ChronoUnit.DAYS.between(
                 LocalDateTime.ofInstant(getBeginDate().toInstant(), ZoneId.systemDefault()),
-                LocalDateTime.ofInstant(cal.getTime().toInstant(), ZoneId.systemDefault())
+                LocalDateTime.ofInstant(calendar.getTime().toInstant(), ZoneId.systemDefault())
         );
+        calendar.setTime(getBeginDate());
+        double fromHour = getCalendarHourIncludeMinuteSecondMilliSecond();
+
+        if (elapsed < 0)
+            return 0;
+
+        return fromHour >= toHour ? elapsed : ++elapsed;
     }
 
     public static class Builder extends RecurrenceBuilder {
