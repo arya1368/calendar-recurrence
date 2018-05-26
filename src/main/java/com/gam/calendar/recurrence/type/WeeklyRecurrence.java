@@ -19,33 +19,24 @@ public class WeeklyRecurrence extends Recurrence {
         super(builder);
     }
 
-    public List<Date> calculateOccurrenceDatesInRange(DateRange range) {
-        List<Date> occurrenceDates = new ArrayList<>();
-        int differenceWeek = calculateDifferenceUnit(range.getFromDate());
-        addDifferenceUnitToRecurrenceBeginDate(differenceWeek);
-        for (; isInUpperBound(calendar.getTime(), range.getToDate()); addDifferenceUnitToRecurrenceBeginDate(differenceWeek)) {
-            for (int weekDayOrder : daysOfWeekOrder.keySet()) {
-                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeekOrder.get(weekDayOrder));
-                if (isDateInRange(range) && !isDateInExDates())
-                    occurrenceDates.add(calendar.getTime());
-            }
-            differenceWeek += interval;
+    protected List<Date> findNextOccurrences(DateRange range) {
+        List<Date> occurrenceInThisWeek = new ArrayList<>();
+        for (int weekDayOrder : daysOfWeekOrder.keySet()) {
+            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeekOrder.get(weekDayOrder));
+            if (isDateInRange(range) && !isDateInExDates())
+                occurrenceInThisWeek.add(calendar.getTime());
         }
 
-        return occurrenceDates;
+        return occurrenceInThisWeek;
     }
 
-    public Date calculateOccurrenceDateAfter(Date from) {
-        int differenceUnit = calculateDifferenceUnit(from);
-        addDifferenceUnitToRecurrenceBeginDate(differenceUnit);
-        for (; isInUpperBound(calendar.getTime(), getEndDate()); addDifferenceUnitToRecurrenceBeginDate(differenceUnit)) {
-            for (int weekDayOrder : daysOfWeekOrder.keySet()) {
-                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeekOrder.get(weekDayOrder));
-                if (!isDateInExDates() && isDateInRange(new DateRange(getBeginDate(), getEndDate()))
-                        && from.compareTo(calendar.getTime()) < 0)
-                    return calendar.getTime();
-            }
-            differenceUnit += interval;
+    protected Date findNextOccurrence(Date from) {
+        for (int weekDayOrder : daysOfWeekOrder.keySet()) {
+            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeekOrder.get(weekDayOrder));
+            if (!isDateInExDates()
+                    && isDateInRange(new DateRange(getBeginDate(), getEndDate()))
+                    && from.compareTo(calendar.getTime()) < 0)
+                return calendar.getTime();
         }
 
         return null;

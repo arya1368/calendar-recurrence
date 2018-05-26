@@ -40,25 +40,39 @@ public abstract class Recurrence implements RecurrenceCalculator {
         List<Date> occurrenceDates = new ArrayList<>();
         int differenceUnit = calculateDifferenceUnit(range.getFromDate());
         addDifferenceUnitToRecurrenceBeginDate(differenceUnit);
-        for (; isDateInRange(range); addDifferenceUnitToRecurrenceBeginDate(differenceUnit)) {
-            if (!isDateInExDates())
-                occurrenceDates.add(calendar.getTime());
-
+        for (; isInUpperBound(calendar.getTime(), range.getToDate()); addDifferenceUnitToRecurrenceBeginDate(differenceUnit)) {
+            occurrenceDates.addAll(findNextOccurrences(range));
             differenceUnit += interval;
         }
 
         return occurrenceDates;
     }
 
+    protected List<Date> findNextOccurrences(DateRange range) {
+        List<Date> occurrence = new ArrayList<>();
+        if (!isDateInExDates())
+            occurrence.add(calendar.getTime());
+
+        return occurrence;
+    }
+
     public Date calculateOccurrenceDateAfter(Date from) {
+        Date next = null;
         int differenceUnit = calculateDifferenceUnit(from);
         addDifferenceUnitToRecurrenceBeginDate(differenceUnit);
-        for (; isInUpperBound(calendar.getTime(), getEndDate()); addDifferenceUnitToRecurrenceBeginDate(differenceUnit)) {
-            if (!isDateInExDates() && from.compareTo(calendar.getTime()) < 0)
-                return calendar.getTime();
-
+        for (; isInUpperBound(calendar.getTime(), getEndDate()) && next == null; addDifferenceUnitToRecurrenceBeginDate(differenceUnit)) {
+            next = findNextOccurrence(from);
             differenceUnit += interval;
         }
+
+        return next;
+    }
+
+    protected Date findNextOccurrence(Date from) {
+        if (!isDateInExDates()
+                && isDateInRange(new DateRange(getBeginDate(), getEndDate()))
+                && from.compareTo(calendar.getTime()) < 0)
+            return calendar.getTime();
 
         return null;
     }
