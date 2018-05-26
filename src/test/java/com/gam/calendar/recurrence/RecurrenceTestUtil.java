@@ -4,7 +4,9 @@ import com.ibm.icu.util.Calendar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.gam.calendar.recurrence.Recurrence.PERSIAN_LOCALE;
 
@@ -54,6 +56,16 @@ public class RecurrenceTestUtil {
         CAL.set(Calendar.HOUR_OF_DAY, hour);
         CAL.set(Calendar.MINUTE, minute);
         CAL.set(Calendar.SECOND, second);
+    }
+
+    public static List<Date> listOfDatesWithConstantTestTime(String... dateStr) throws Exception {
+        List<Date> dates = new ArrayList<>();
+        for (String d : dateStr) {
+            setCalendarTimeForConstantTestTime(d);
+            dates.add(CAL.getTime());
+        }
+
+        return dates;
     }
 
     public static class TestUtilException extends RuntimeException {

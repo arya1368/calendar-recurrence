@@ -46,15 +46,15 @@ class DailyRecurrenceTest {
         @Nested
         class CalculateOccurrenceDatesInRange {
             @Test
-            void mustContainsAllDayInTestRange() {
+            void mustContainsAllDayInTestRange() throws Exception {
                 List<Date> occurrenceDates = dailyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                 assertTrue(occurrenceDates.size() == 30);
-                CAL.setTime(RANGE_WITH_30_DAYS.getFromDate());
-                setCalendarTimeForConstantTestTime();
-                for (Date date : occurrenceDates) {
-                    assertEquals(CAL.getTime(), date);
-                    CAL.add(com.ibm.icu.util.Calendar.DATE, DEFAULT_INTERVAL);
-                }
+                List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-21", "2018-01-22", "2018-01-23", "2018-01-24", "2018-01-25", "2018-01-26",
+                        "2018-01-27", "2018-01-28", "2018-01-29", "2018-01-30", "2018-01-31", "2018-02-01", "2018-02-02",
+                        "2018-02-03", "2018-02-04", "2018-02-05", "2018-02-06", "2018-02-07",  "2018-02-08",  "2018-02-09",
+                        "2018-02-10", "2018-02-11", "2018-02-12", "2018-02-13", "2018-02-14", "2018-02-15", "2018-02-16",
+                        "2018-02-17", "2018-02-18", "2018-02-19");
+                assertTrue(occurrenceDates.containsAll(expectedDates));
             }
         }
 
@@ -77,9 +77,20 @@ class DailyRecurrenceTest {
 
                 setCalendarTimeForConstantTestTime(lastRec);
                 assertEquals(expected, dailyRecurrence.calculateOccurrenceDateAfter(CAL.getTime()));
+
                 CAL.add(Calendar.HOUR, 2);
                 assertEquals(expected, dailyRecurrence.calculateOccurrenceDateAfter(CAL.getTime()));
+
                 setCalendarTimeForEndOfDay();
+                assertEquals(expected, dailyRecurrence.calculateOccurrenceDateAfter(CAL.getTime()));
+
+                setCalendarTimeForConstantTestTime(lastRec);
+                CAL.add(Calendar.HOUR, 23);
+                assertEquals(expected, dailyRecurrence.calculateOccurrenceDateAfter(CAL.getTime()));
+
+                setCalendarTimeForConstantTestTime(lastRec);
+                CAL.add(Calendar.DATE, 1);
+                CAL.add(Calendar.MILLISECOND, -1);
                 assertEquals(expected, dailyRecurrence.calculateOccurrenceDateAfter(CAL.getTime()));
             }
         }
@@ -104,12 +115,11 @@ class DailyRecurrenceTest {
             void inTestRangeShouldReturn22ExpectedDay() throws Exception {
                 List<Date> occurrenceDates = dailyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                 assertTrue(occurrenceDates.size() == 22);
-                CAL.setTime(RANGE_WITH_30_DAYS.getFromDate());
-                setCalendarTimeForConstantTestTime();
-                for (Date date : occurrenceDates) {
-                    assertEquals(CAL.getTime(), date);
-                    CAL.add(com.ibm.icu.util.Calendar.DATE, DEFAULT_INTERVAL);
-                }
+                List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-21", "2018-01-22", "2018-01-23", "2018-01-24", "2018-01-25", "2018-01-26",
+                        "2018-01-27", "2018-01-28", "2018-01-29", "2018-01-30", "2018-01-31", "2018-02-01", "2018-02-02",
+                        "2018-02-03", "2018-02-04", "2018-02-05", "2018-02-06", "2018-02-07",  "2018-02-08",  "2018-02-09",
+                        "2018-02-10", "2018-02-11");
+                assertTrue(occurrenceDates.containsAll(expectedDates));
             }
         }
 
@@ -144,16 +154,8 @@ class DailyRecurrenceTest {
             String fifthOfBahman96 = "2018-01-25";
             String tenthOfBahman96 = "2018-01-30";
             String sixteenthOfBahman96 = "2018-02-05";
-            initialExDates(fifthOfBahman96, tenthOfBahman96, sixteenthOfBahman96);
+            exDates = listOfDatesWithConstantTestTime(fifthOfBahman96, tenthOfBahman96, sixteenthOfBahman96);
             dailyRecurrence = builder.setExDates(exDates).build();
-        }
-
-        private void initialExDates(String... dates) throws ParseException {
-            exDates = new ArrayList<>();
-            for (String d : dates) {
-                setCalendarTimeForConstantTestTime(d);
-                exDates.add(CAL.getTime());
-            }
         }
 
         @Nested
@@ -162,23 +164,12 @@ class DailyRecurrenceTest {
             void inTestRangeShouldReturn27ExpectedDay() throws Exception {
                 List<Date> occurrenceDates = dailyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                 assertTrue(occurrenceDates.size() == 27);
-                CAL.setTime(RANGE_WITH_30_DAYS.getFromDate());
-                setCalendarTimeForConstantTestTime();
-                for (Date date : occurrenceDates) {
-                    boolean isExDate = false;
-                    for (Date ex : exDates) {
-                        if (CAL.getTime().compareTo(ex) == 0) {
-                            isExDate = true;
-                            CAL.add(Calendar.DATE, DEFAULT_INTERVAL);
-                            assertEquals(CAL.getTime(), date);
-                            CAL.add(Calendar.DATE, DEFAULT_INTERVAL);
-                        }
-                    }
-                    if (!isExDate) {
-                        assertEquals(CAL.getTime(), date);
-                        CAL.add(Calendar.DATE, DEFAULT_INTERVAL);
-                    }
-                }
+                List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-21", "2018-01-22", "2018-01-23", "2018-01-24", "2018-01-26",
+                        "2018-01-27", "2018-01-28", "2018-01-29", "2018-01-31", "2018-02-01", "2018-02-02",
+                        "2018-02-03", "2018-02-04", "2018-02-06", "2018-02-07",  "2018-02-08",  "2018-02-09",
+                        "2018-02-10", "2018-02-11", "2018-02-12", "2018-02-13", "2018-02-14", "2018-02-15", "2018-02-16",
+                        "2018-02-17", "2018-02-18", "2018-02-19");
+                assertTrue(occurrenceDates.containsAll(expectedDates));
             }
         }
 
@@ -219,12 +210,12 @@ class DailyRecurrenceTest {
             void mustContainsExpectedDayInTestRange() throws Exception {
                 List<Date> occurrenceDates = dailyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                 assertTrue(occurrenceDates.size() == 10);
-                String thirdOfBahman96 = "2018-01-23";
-                setCalendarTimeForConstantTestTime(thirdOfBahman96);
-                for (Date date : occurrenceDates) {
-                    assertEquals(CAL.getTime(), date);
-                    CAL.add(Calendar.DATE, interval);
-                }
+                List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-23", "2018-01-26",
+                        "2018-01-29", "2018-02-01",
+                        "2018-02-04", "2018-02-07",
+                        "2018-02-10", "2018-02-13", "2018-02-16",
+                        "2018-02-19");
+                assertTrue(occurrenceDates.containsAll(expectedDates));
             }
         }
 
@@ -275,8 +266,14 @@ class DailyRecurrenceTest {
             CAL.setTime(recurrenceStartDate);
             CAL.add(Calendar.DATE, elapsedDay);
             assertEquals(elapsedDay, calculateElapsedDay());
+
+            CAL.setTime(recurrenceStartDate);
+            CAL.add(Calendar.DATE, elapsedDay);
             CAL.add(Calendar.HOUR, -1);
             assertEquals(elapsedDay, calculateElapsedDay());
+
+            CAL.setTime(recurrenceStartDate);
+            CAL.add(Calendar.DATE, elapsedDay);
             CAL.add(Calendar.HOUR, 4);
             assertEquals(elapsedDay + 1, calculateElapsedDay());
         }

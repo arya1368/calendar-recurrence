@@ -55,8 +55,8 @@ public class WeeklyRecurrence extends Recurrence {
         calendar.setTime(toDate);
         setCalendarWithRecurrenceBeginTime();
         int elapsed = (int) ChronoUnit.WEEKS.between(
-                LocalDateTime.ofInstant(getBeginDate().toInstant(), ZoneId.systemDefault()),
-                LocalDateTime.ofInstant(calendar.getTime().toInstant(), ZoneId.systemDefault())
+                getBeginDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
         );
         return elapsed < 0 ? 0 : elapsed;
     }

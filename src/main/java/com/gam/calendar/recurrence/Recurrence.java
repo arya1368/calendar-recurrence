@@ -28,20 +28,12 @@ public abstract class Recurrence implements RecurrenceCalculator {
         daysOfWeekOrder = builder.daysOfWeekOrder;
     }
 
-    public Date getBeginDate() {
+    protected Date getBeginDate() {
         return dateRange.getFromDate();
     }
 
-    public Date getEndDate() {
+    protected Date getEndDate() {
         return dateRange.getToDate();
-    }
-
-    public int getInterval() {
-        return interval;
-    }
-
-    public List<Date> getExDates() {
-        return exDates;
     }
 
     public List<Date> calculateOccurrenceDatesInRange(DateRange range) {
@@ -73,10 +65,8 @@ public abstract class Recurrence implements RecurrenceCalculator {
 
     protected int calculateDifferenceUnit(Date toDate) {
         int elapsed = calculateElapsedUnit(toDate);
-        elapsed = elapsed > 0 ? elapsed : 0;
         int difference = elapsed % interval;
-        difference = difference == 0 ? difference : Math.abs(interval - difference);
-        return difference + elapsed;
+        return difference == 0 ? elapsed : elapsed + Math.abs(interval - difference);
     }
 
     protected abstract int calculateElapsedUnit(Date toDate);

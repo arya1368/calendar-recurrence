@@ -29,9 +29,10 @@ public class DailyRecurrence extends Recurrence {
         double toHour = getCalendarHourIncludeMinuteSecondMilliSecond();
         setCalendarWithRecurrenceBeginTime();
         int elapsed = (int) ChronoUnit.DAYS.between(
-                LocalDateTime.ofInstant(getBeginDate().toInstant(), ZoneId.systemDefault()),
-                LocalDateTime.ofInstant(calendar.getTime().toInstant(), ZoneId.systemDefault())
+                getBeginDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
         );
+
         calendar.setTime(getBeginDate());
         double fromHour = getCalendarHourIncludeMinuteSecondMilliSecond();
 

@@ -29,7 +29,7 @@ public abstract class RecurrenceBuilder {
 
     public RecurrenceBuilder setInterval(int interval) {
         if (interval <= 0)
-            throw new IllegalBuilderArgumentException("interval can not be under zero. interval: " + interval);
+            throw new IllegalBuilderArgumentException("interval must be greater than zero. interval: " + interval);
 
         this.interval = interval;
         return this;

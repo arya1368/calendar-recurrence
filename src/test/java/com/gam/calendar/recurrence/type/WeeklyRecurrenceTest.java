@@ -14,9 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.gam.calendar.recurrence.RecurrenceTestUtil.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class WeeklyRecurrenceTest {
     private Recurrence weeklyRecurrence;
@@ -31,18 +29,14 @@ class WeeklyRecurrenceTest {
         builder = new WeeklyRecurrence.Builder(recurrenceStartDate);
     }
 
-    private List<Date> listOf(String... dateStr) throws Exception {
-        List<Date> dates = new ArrayList<>();
-        for (String d : dateStr) {
-            setCalendarTimeForConstantTestTime(d);
-            dates.add(CAL.getTime());
-        }
-
-        return dates;
+    @Test
+    void createInstanceOfWeeklyWithOutAddingDayOfWeek_throwsIllegalBuilderArgumentException() {
+        RecurrenceBuilder.IllegalBuilderArgumentException exception = assertThrows(RecurrenceBuilder.IllegalBuilderArgumentException.class, () -> builder.build());
+        assertEquals("must add at least one day of week.", exception.getMessage());
     }
 
     @Test
-    void createInstanceOfDailyRecurrence() {
+    void createInstanceOfWeeklyRecurrence() {
         weeklyRecurrence = builder.onSaturday().build();
         assertTrue(weeklyRecurrence instanceof WeeklyRecurrence);
     }
@@ -67,7 +61,7 @@ class WeeklyRecurrenceTest {
                 void mustContainsAllEvenDateInTestRange() throws Exception {
                     List<Date> occurrenceDates = weeklyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                     assertTrue(occurrenceDates.size() == 13);
-                    List<Date> expectedDates = listOf("2018-01-22", "2018-01-24",
+                    List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-22", "2018-01-24",
                             "2018-01-27", "2018-01-29", "2018-01-31",
                             "2018-02-03", "2018-02-05", "2018-02-07",
                             "2018-02-10", "2018-02-12", "2018-02-14",
@@ -132,7 +126,7 @@ class WeeklyRecurrenceTest {
                 void inTestRangeShouldReturn6Dates() throws Exception {
                     List<Date> occurrenceDates = weeklyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                     assertTrue(occurrenceDates.size() == 6);
-                    List<Date> expectedDates = listOf("2018-01-22", "2018-01-24",
+                    List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-22", "2018-01-24",
                             "2018-01-27", "2018-01-29", "2018-01-31",
                             "2018-02-03");
                     assertTrue(occurrenceDates.containsAll(expectedDates));
@@ -171,7 +165,7 @@ class WeeklyRecurrenceTest {
                 String mondaySecondOfBahman96 = "2018-01-22";
                 String mondaySixteenthOfBhaman96 = "2018-02-05";
                 String wednesdayTwentyFifthOfBhaman96 = "2018-02-14";
-                exDates = listOf(mondaySecondOfBahman96, mondaySixteenthOfBhaman96, wednesdayTwentyFifthOfBhaman96);
+                exDates = listOfDatesWithConstantTestTime(mondaySecondOfBahman96, mondaySixteenthOfBhaman96, wednesdayTwentyFifthOfBhaman96);
                 weeklyRecurrence = builder.setExDates(exDates).build();
             }
 
@@ -181,7 +175,7 @@ class WeeklyRecurrenceTest {
                 void mustContainsAllEvenDateInTestRange() throws Exception {
                     List<Date> occurrenceDates = weeklyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                     assertTrue(occurrenceDates.size() == 10);
-                    List<Date> expectedDates = listOf("2018-01-24",
+                    List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-24",
                             "2018-01-27", "2018-01-29", "2018-01-31",
                             "2018-02-03", "2018-02-07",
                             "2018-02-10", "2018-02-12",
@@ -224,7 +218,7 @@ class WeeklyRecurrenceTest {
                 void mustContainsAllEvenDateInTestRange() throws Exception {
                     List<Date> occurrenceDates = weeklyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                     assertTrue(occurrenceDates.size() == 6);
-                    List<Date> expectedDates = listOf("2018-01-27", "2018-01-29", "2018-01-31",
+                    List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-27", "2018-01-29", "2018-01-31",
                             "2018-02-10", "2018-02-12", "2018-02-14");
                     assertTrue(occurrenceDates.containsAll(expectedDates));
                 }
@@ -272,7 +266,7 @@ class WeeklyRecurrenceTest {
                 void mustContainsAllWeekendsInTestRange() throws Exception {
                     List<Date> occurrenceDates = weeklyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                     assertTrue(occurrenceDates.size() == 8);
-                    List<Date> expectedDates = listOf("2018-01-25", "2018-01-26",
+                    List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-25", "2018-01-26",
                             "2018-02-01", "2018-02-02",
                             "2018-02-08", "2018-02-09",
                             "2018-02-15", "2018-02-16");
@@ -319,7 +313,7 @@ class WeeklyRecurrenceTest {
                 void inTestRangeShouldReturn4Dates() throws Exception {
                     List<Date> occurrenceDates = weeklyRecurrence.calculateOccurrenceDatesInRange(RANGE_WITH_30_DAYS);
                     assertTrue(occurrenceDates.size() == 4);
-                    List<Date> expectedDates = listOf("2018-01-25", "2018-01-26",
+                    List<Date> expectedDates = listOfDatesWithConstantTestTime("2018-01-25", "2018-01-26",
                             "2018-02-01", "2018-02-02");
                     assertTrue(occurrenceDates.containsAll(expectedDates));
                 }
