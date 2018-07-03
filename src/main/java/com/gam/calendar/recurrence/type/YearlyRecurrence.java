@@ -15,6 +15,7 @@ public class YearlyRecurrence extends Recurrence {
         super(builder);
     }
 
+    @Override
     protected int calculateElapsedUnit(Date toDate) {
         calendar.setTime(getBeginDate());
         int fromYear = calendar.get(Calendar.YEAR);
@@ -40,6 +41,7 @@ public class YearlyRecurrence extends Recurrence {
         return ++elapsedYear;
     }
 
+    @Override
     protected void addDifferenceUnitToRecurrenceBeginDate(int differenceUnit) {
         calendar.setTime(getBeginDate());
         calendar.add(Calendar.YEAR, differenceUnit);
@@ -51,6 +53,7 @@ public class YearlyRecurrence extends Recurrence {
             super(beginDate);
         }
 
+        @Override
         public Recurrence build() {
             return new YearlyRecurrence(this);
         }

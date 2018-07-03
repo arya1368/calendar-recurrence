@@ -1,14 +1,16 @@
 package com.gam.calendar.recurrence.type;
 
 import com.gam.calendar.recurrence.DateRange;
-import com.gam.calendar.recurrence.RecurrenceBuilder;
 import com.gam.calendar.recurrence.Recurrence;
+import com.gam.calendar.recurrence.RecurrenceBuilder;
 import com.ibm.icu.util.Calendar;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Arya Pishgah (pishgah@gamelectronics.com) 19/05/2018
@@ -19,10 +21,11 @@ public class WeeklyRecurrence extends Recurrence {
         super(builder);
     }
 
+    @Override
     protected List<Date> findNextOccurrences(DateRange range) {
         List<Date> occurrenceInThisWeek = new ArrayList<>();
-        for (int weekDayOrder : daysOfWeekOrder.keySet()) {
-            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeekOrder.get(weekDayOrder));
+        for (Map.Entry<Integer, Integer> dayWithOrder : daysOfWeekOrder.entrySet()) {
+            calendar.set(Calendar.DAY_OF_WEEK, dayWithOrder.getValue());
             if (isDateInRange(range) && !isDateInExDates())
                 occurrenceInThisWeek.add(calendar.getTime());
         }
@@ -30,9 +33,11 @@ public class WeeklyRecurrence extends Recurrence {
         return occurrenceInThisWeek;
     }
 
+    @Override
     protected Date findNextOccurrence(Date from) {
-        for (int weekDayOrder : daysOfWeekOrder.keySet()) {
-            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeekOrder.get(weekDayOrder));
+        for (Map.Entry<Integer, Integer> dayWithOrder : daysOfWeekOrder.entrySet()) {
+            calendar.set(Calendar.DAY_OF_WEEK, dayWithOrder.getValue());
+
             if (!isDateInExDates()
                     && isDateInRange(new DateRange(getBeginDate(), getEndDate()))
                     && from.compareTo(calendar.getTime()) < 0)
@@ -42,6 +47,7 @@ public class WeeklyRecurrence extends Recurrence {
         return null;
     }
 
+    @Override
     protected int calculateElapsedUnit(Date toDate) {
         calendar.setTime(toDate);
         setCalendarWithRecurrenceBeginTime();
@@ -52,6 +58,7 @@ public class WeeklyRecurrence extends Recurrence {
         return elapsed < 0 ? 0 : elapsed;
     }
 
+    @Override
     protected void addDifferenceUnitToRecurrenceBeginDate(int differenceUnit) {
         calendar.setTime(getBeginDate());
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
@@ -64,6 +71,7 @@ public class WeeklyRecurrence extends Recurrence {
             super(beginDate);
         }
 
+        @Override
         public Recurrence build() {
             if (daysOfWeekOrder.isEmpty())
                 throw new IllegalBuilderArgumentException("must add at least one day of week.");

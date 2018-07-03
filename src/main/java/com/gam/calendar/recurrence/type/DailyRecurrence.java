@@ -1,11 +1,9 @@
 package com.gam.calendar.recurrence.type;
 
-import com.gam.calendar.recurrence.RecurrenceBuilder;
 import com.gam.calendar.recurrence.Recurrence;
+import com.gam.calendar.recurrence.RecurrenceBuilder;
 import com.ibm.icu.util.Calendar;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -19,11 +17,13 @@ public class DailyRecurrence extends Recurrence {
         super(builder);
     }
 
+    @Override
     protected void addDifferenceUnitToRecurrenceBeginDate(int differenceUnit) {
         calendar.setTime(getBeginDate());
         calendar.add(Calendar.DATE, differenceUnit);
     }
 
+    @Override
     protected int calculateElapsedUnit(Date toDate) {
         calendar.setTime(toDate);
         double toHour = getCalendarHourIncludeMinuteSecondMilliSecond();
@@ -48,6 +48,7 @@ public class DailyRecurrence extends Recurrence {
             super(beginDate);
         }
 
+        @Override
         public Recurrence build() {
             return new DailyRecurrence(this);
         }

@@ -15,6 +15,7 @@ public class MonthlyRecurrence extends Recurrence {
         super(builder);
     }
 
+    @Override
     protected int calculateElapsedUnit(Date toDate) {
         calendar.setTime(getBeginDate());
         int fromMonth = calendar.get(Calendar.YEAR) * 12 + calendar.get(Calendar.MONTH);
@@ -41,6 +42,7 @@ public class MonthlyRecurrence extends Recurrence {
         return fromDay >= toDay ? elapsedMonth : ++elapsedMonth;
     }
 
+    @Override
     protected void addDifferenceUnitToRecurrenceBeginDate(int differenceUnit) {
         calendar.setTime(getBeginDate());
         calendar.add(Calendar.MONTH, differenceUnit);
@@ -52,6 +54,7 @@ public class MonthlyRecurrence extends Recurrence {
             super(beginDate);
         }
 
+        @Override
         public Recurrence build() {
             return new MonthlyRecurrence(this);
         }
